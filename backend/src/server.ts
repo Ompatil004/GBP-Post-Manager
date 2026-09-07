@@ -4,7 +4,12 @@ import cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+// Load .env file for local development; on Vercel, env vars are injected by the platform
+try {
+  dotenv.config({ path: path.resolve(__dirname, '../.env') });
+} catch {
+  // Silently ignore - Vercel injects env vars directly
+}
 
 import connectToDatabase from './config/db.js';
 import authRoutes from './routes/auth.js';
