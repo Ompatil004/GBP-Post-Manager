@@ -126,12 +126,14 @@ router.post('/login', async (req: Request, res: Response) => {
 
 // POST /api/auth/logout
 router.post('/logout', (req: Request, res: Response) => {
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
   res.cookie('auth_token', '', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
     path: '/',
     maxAge: 0,
+    expires: new Date(0),
   });
   return res.status(200).json({ message: 'Logged out successfully' });
 });

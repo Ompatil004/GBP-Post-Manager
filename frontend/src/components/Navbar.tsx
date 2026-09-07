@@ -34,10 +34,14 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await apiFetch('/api/auth/logout', { method: 'POST' });
-      router.push('/login');
-      router.refresh();
     } catch (err) {
       console.error('Logout error:', err);
+    } finally {
+      localStorage.removeItem('auth_token');
+      document.cookie = 'auth_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+      setUser(null);
+      router.push('/login');
+      router.refresh();
     }
   };
 
