@@ -49,16 +49,19 @@ router.post('/register', async (req: Request, res: Response) => {
       { expiresIn: '7d' }
     );
 
+    const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+
     res.cookie('auth_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(201).json({
       message: 'Registration successful',
+      token,
       user: {
         _id: user._id.toString(),
         name: user.name,
@@ -96,16 +99,19 @@ router.post('/login', async (req: Request, res: Response) => {
       { expiresIn: '7d' }
     );
 
+    const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+
     res.cookie('auth_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({
       message: 'Login successful',
+      token,
       user: {
         _id: user._id.toString(),
         name: user.name,

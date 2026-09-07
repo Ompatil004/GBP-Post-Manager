@@ -46,6 +46,11 @@ export default function LoginPage() {
         throw new Error(data.error || 'Invalid credentials');
       }
 
+      if (data.token) {
+        localStorage.setItem('auth_token', data.token);
+        document.cookie = `auth_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+      }
+
       router.push('/dashboard');
       router.refresh();
     } catch (err: unknown) {

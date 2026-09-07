@@ -71,11 +71,16 @@ export default function RegisterPage() {
         throw new Error(data.error || 'Registration failed');
       }
 
+      if (data.token) {
+        localStorage.setItem('auth_token', data.token);
+        document.cookie = `auth_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
+      }
+
       setSuccess('Account created successfully! Redirecting to dashboard...');
       setTimeout(() => {
         router.push('/dashboard');
         router.refresh();
-      }, 1000);
+      }, 500);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An error occurred during registration');
     } finally {
