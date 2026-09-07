@@ -67,7 +67,8 @@ app.use('/api/posts', postRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/stats', statsRoutes);
 
-if (process.env.NODE_ENV !== 'production' || require.main === module) {
+// Only start listening locally, not on Vercel (serverless)
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`🚀 Express Backend Server running on http://localhost:${PORT}`);
   });
