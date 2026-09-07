@@ -55,6 +55,11 @@ app.use(async (req, res, next) => {
   }
 });
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ message: 'GBP Post Manager API is running', status: 'ok' });
+});
+
 // Health Check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
