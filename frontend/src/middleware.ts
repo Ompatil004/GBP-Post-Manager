@@ -18,14 +18,17 @@ export function middleware(req: NextRequest) {
 
   // If visiting a protected page without auth token, redirect to login
   if (isProtectedRoute && !token) {
-    const loginUrl = new URL('/login', req.url);
-    loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
+    const url = req.nextUrl.clone();
+    url.pathname = '/login';
+    url.searchParams.set('from', pathname);
+    return NextResponse.redirect(url);
   }
 
   // If already logged in and visiting login/register, redirect to dashboard
   if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    const url = req.nextUrl.clone();
+    url.pathname = '/dashboard';
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
