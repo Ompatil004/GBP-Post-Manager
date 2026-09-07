@@ -1,15 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_gbp_manager_2026';
-
-const PROTECTED_ROUTES = [
-  '/dashboard',
-  '/locations',
-  '/posts',
-];
-
+const PROTECTED_ROUTES = ['/dashboard', '/locations', '/posts'];
 const AUTH_ROUTES = ['/login', '/register'];
 
 export async function middleware(req: NextRequest) {
@@ -20,6 +12,8 @@ export async function middleware(req: NextRequest) {
 
   if (token) {
     try {
+      const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_gbp_manager_2026';
+      const { jwtVerify } = await import('jose');
       const secret = new TextEncoder().encode(JWT_SECRET);
       await jwtVerify(token, secret);
       isAuthenticated = true;
@@ -28,7 +22,6 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Check if current pathname is protected or sub-route of protected
   const isProtectedRoute = PROTECTED_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
